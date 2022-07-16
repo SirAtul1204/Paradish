@@ -1,8 +1,0 @@
-.major {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  flex-direction: column;
-  gap: 2rem;
-}
