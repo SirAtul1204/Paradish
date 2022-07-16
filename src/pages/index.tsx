@@ -3,6 +3,8 @@ import styles from "../styles/Index-styles.module.css";
 import Nav from "../components/Nav";
 import Title from "../components/Title";
 import Image from "next/image";
+import { trpc } from "../Utils/trpc";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
   return (
