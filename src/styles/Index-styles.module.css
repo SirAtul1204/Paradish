@@ -1,10 +1,19 @@
 .major {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 2%;
-  padding: 2%;
+  justify-content: center;
+  /* margin-top: 2%;
+  padding: 2%; */
   flex-grow: 1;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5%;
+  border-radius: var(--border-radius-big);
+  border: 2px solid var(--color-white);
 }
 
 .titleContainer {

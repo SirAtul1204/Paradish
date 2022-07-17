@@ -9,6 +9,7 @@
 
 .label {
   font-weight: 600;
+  color: var(--color-white);
 }
 
 .input {
@@ -16,10 +17,10 @@
   font-family: "Quicksand", sans-serif;
   font-weight: 400;
   font-size: 2rem;
-  padding: 1.5%;
+  padding: 2% 3%;
   width: 40rem;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: 5px solid transparent;
   outline: none;
   transition: all var(--normal-animation-time) ease;
 }
@@ -29,9 +30,14 @@
 }
 
 .error {
-  border-bottom: 2px solid var(--color-red);
+  border-bottom: 5px solid var(--color-red);
 }
 
 .success {
-  border-bottom: 2px solid var(--color-green);
+  border-bottom: 5px solid var(--color-green);
+}
+
+.errorMsg {
+  color: var(--color-red);
+  width: 40rem;
 }

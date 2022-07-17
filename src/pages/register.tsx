@@ -5,6 +5,12 @@ import PrimaryButton from "../components/PrimaryButton";
 import Form from "../components/Form";
 import styles from "../styles/Register-styles.module.css";
 import Title from "../components/Title";
+import { emailValidator } from "../Utils/emailValidator";
+import { nameValidator } from "../Utils/nameValidator";
+import { passwordValidator } from "../Utils/passwordValidator";
+import { trpc } from "../Utils/trpc";
+import { HashLoader } from "react-spinners";
+import Loader from "../components/Loader";
 
 const Register = () => {
   const [restaurantName, setRestaurantName] = useState("");
@@ -13,12 +19,16 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const changeRestaurantName = (e: ChangeEvent<HTMLInputElement>) => {
+    setRestaurantName(e.target.value.trimStart());
+  };
+
   const changeOwnerName = (e: ChangeEvent<HTMLInputElement>) => {
-    setOwnerName(e.target.value);
+    setOwnerName(e.target.value.trimStart());
   };
 
   const changeOwnerEmail = (e: ChangeEvent<HTMLInputElement>) => {
-    setOwnerEmail(e.target.value);
+    setOwnerEmail(e.target.value.trimStart());
   };
 
   const changePassword = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,13 +39,26 @@ const Register = () => {
     setConfirmPassword(e.target.value);
   };
 
-  const handleRegister = (e: SubmitEvent) => {
+  const mutation = trpc.useMutation("restaurant.create");
+
+  const handleRegister = async (e: SubmitEvent) => {
     e.preventDefault();
-    console.log("Submit Clicked");
+    const data = await mutation.mutateAsync({
+      restaurantName,
+      ownerEmail,
+      ownerName,
+      password,
+    });
+
+    console.log(data);
   };
 
+  if (mutation.isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <div className="mainWrapper bg-tertiary">
+    <div className="mainWrapper">
       <Nav />
       <div className={`${styles.major} mw-wrapper`}>
         <Title
@@ -48,7 +71,8 @@ const Register = () => {
             content="Restaurant Name"
             required
             value={restaurantName}
-            modifier={setRestaurantName}
+            modifier={changeRestaurantName}
+            validator={nameValidator}
           />
           <Input
             type="text"
@@ -56,6 +80,7 @@ const Register = () => {
             required
             value={ownerName}
             modifier={changeOwnerName}
+            validator={nameValidator}
           />
           <Input
             type="text"
@@ -63,6 +88,7 @@ const Register = () => {
             required
             value={ownerEmail}
             modifier={changeOwnerEmail}
+            validator={emailValidator}
           />
           <Input
             type="password"
@@ -70,6 +96,7 @@ const Register = () => {
             required
             value={password}
             modifier={changePassword}
+            validator={passwordValidator}
           />
           <Input
             type="password"
@@ -77,6 +104,7 @@ const Register = () => {
             required
             value={confirmPassword}
             modifier={changeConfirmPassword}
+            isEqualTo={password}
           />
           <PrimaryButton
             type="submit"

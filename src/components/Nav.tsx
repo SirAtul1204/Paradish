@@ -14,7 +14,7 @@ const Nav = () => {
           <div className={styles.imgWrapper}>
             <Link href="/">
               <Image
-                src={"/assets/Paradish.png"}
+                src={"/assets/Paradish-white.png"}
                 alt="Logo"
                 className={styles.logo}
                 layout="fill"

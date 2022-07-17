@@ -8,23 +8,25 @@ import { useEffect } from "react";
 
 const Home: NextPage = () => {
   return (
-    <div className="mainWrapper bg-tertiary">
+    <div className="mainWrapper">
       <Nav />
       <div className={`${styles.major} mw-wrapper`}>
-        <div className={styles.titleContainer}>
-          <Title variant="h1" content="Welcome to Paradish!" />
-          <Title
-            variant="h2"
-            content="Your one stop solution to all your Restaurant needs!"
-          />
-        </div>
-        <div className={styles.imgWrapper}>
-          <Image
-            src={"/assets/restaurant.webp"}
-            alt="restaurant"
-            layout="fill"
-            objectFit="contain"
-          />
+        <div className={styles.container}>
+          <div className={styles.titleContainer}>
+            <Title variant="h1" content="Welcome to Paradish!" />
+            <Title
+              variant="h2"
+              content="Your one stop solution to all your Restaurant needs!"
+            />
+          </div>
+          <div className={styles.imgWrapper}>
+            <Image
+              src={"/assets/restaurant.webp"}
+              alt="restaurant"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
         </div>
       </div>
     </div>

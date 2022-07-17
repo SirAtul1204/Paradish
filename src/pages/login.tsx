@@ -23,7 +23,7 @@ const Login = () => {
   };
 
   return (
-    <div className="mainWrapper bg-tertiary">
+    <div className="mainWrapper">
       <Nav />
       <div className={`${styles.major} mw-wrapper`}>
         <Title content="Login to continue!" variant="h2" />

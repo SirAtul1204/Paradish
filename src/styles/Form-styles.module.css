@@ -4,8 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 2%;
-  background-color: var(--color-grey-background);
   border-radius: var(--border-radius-big);
-  box-shadow: var(--box-shadow);
+  border: 2px solid var(--color-white);
   gap: 1rem;
 }

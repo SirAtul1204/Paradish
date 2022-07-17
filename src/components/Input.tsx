@@ -7,8 +7,9 @@ interface InputProps {
   modifier: (e: any) => void;
   type: "text" | "number" | "email" | "password";
   content: string;
-  validator?: (data: string) => boolean;
+  validator?: (data: string) => [boolean, string | undefined];
   required?: boolean;
+  isEqualTo?: string;
 }
 
 const Input: FC<InputProps> = ({
@@ -18,17 +19,29 @@ const Input: FC<InputProps> = ({
   value,
   modifier,
   required,
+  isEqualTo,
 }) => {
   const tempArr = content.split(" ");
   const id = tempArr.join("_");
 
   const [isValid, setIsValid] = useState<boolean | null>(null);
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    setIsValid(validator ? validator(value) : basicValidator(value));
-  }, [validator, value]);
+  const handleOnBlur = () => {
+    if (validator) {
+      const [isValid, errorMsg] = validator(value);
+      setIsValid(isValid);
+      if (errorMsg) setErrorMsg(errorMsg);
+      else setErrorMsg(null);
+    } else if (isEqualTo) {
+      setIsValid(value === isEqualTo);
+      setErrorMsg(value === isEqualTo ? null : "Passwords don't match");
+    } else if (type !== "password") {
+      setIsValid(basicValidator(value));
+      setErrorMsg("Removing leading and trailing white spaces");
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -38,13 +51,16 @@ const Input: FC<InputProps> = ({
       <input
         type={type}
         id={id}
-        className={`${styles.input} ${isValid ? styles.success : styles.error}`}
+        className={`${styles.input} ${
+          isValid || isValid === null ? styles.success : styles.error
+        }`}
         placeholder={content}
-        ref={inputRef}
         value={value}
         onChange={modifier}
         required={required}
+        onBlur={handleOnBlur}
       />
+      {errorMsg && <p className={styles.errorMsg}>&#42; {errorMsg}</p>}
     </div>
   );
 };

@@ -1,10 +1,10 @@
 .nav {
-  background-color: var(--color-tertiary);
+  background-color: var(--color-black-bg);
   width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 2px solid var(--color-black);
+  border-bottom: 2px solid var(--color-white);
   height: max-content;
 }
 
