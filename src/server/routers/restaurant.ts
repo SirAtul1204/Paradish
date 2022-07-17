@@ -4,9 +4,9 @@ import { createRouter } from "../createRouter";
 import { prisma } from "../prisma";
 import * as bcrypt from "bcrypt";
 import { Role } from "@prisma/client";
-import { emailSchema } from "../../../Utils/emailValidator";
-import { nameSchema } from "../../../Utils/nameValidator";
-import { passwordSchema } from "../../../Utils/passwordValidator";
+import { emailSchema } from "../../Utils/emailValidator";
+import { nameSchema } from "../../Utils/nameValidator";
+import { passwordSchema } from "../../Utils/passwordValidator";
 
 export const restaurantRouter = createRouter().mutation("create", {
   input: z.object({

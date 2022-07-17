@@ -1,6 +1,6 @@
 import { withTRPC } from "@trpc/next";
 import { AppType } from "next/dist/shared/lib/utils";
-import { AppRouter } from "./server/routers/app";
+import { AppRouter } from "../server/routers/app";
 
 import "../styles/globals.css";
 import "../styles/utils.css";
