@@ -1,12 +1,20 @@
 import { withTRPC } from "@trpc/next";
 import { AppType } from "next/dist/shared/lib/utils";
+import { Provider } from "react-redux";
+import Modal from "../components/Modal";
+import store from "../redux/store";
 import { AppRouter } from "../server/routers/app";
 
 import "../styles/globals.css";
 import "../styles/utils.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+      <Modal />
+    </Provider>
+  );
 };
 
 export default withTRPC<AppRouter>({

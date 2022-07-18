@@ -1,22 +1,25 @@
 import { FC } from "react";
 import styles from "../styles/Title-styles.module.css";
+import { EColor, TStyle } from "../Utils/interface";
 
 interface TitleProps {
   content: string;
   variant: "h1" | "h2";
+  color: TStyle;
 }
 
-const Title: FC<TitleProps> = ({ content, variant }) => {
+const Title: FC<TitleProps> = ({ content, variant, color }) => {
+  const className = `${styles.title} ${styles[variant]} ${color}`;
   let jsx = null;
   switch (variant) {
     case "h1":
-      jsx = <h1 className={`${styles.title} ${styles.h1}`}>{content}</h1>;
+      jsx = <h1 className={className}>{content}</h1>;
       break;
     case "h2":
-      jsx = <h2 className={`${styles.title} ${styles.h2}`}>{content}</h2>;
+      jsx = <h2 className={className}>{content}</h2>;
       break;
     default:
-      jsx = <></>;
+      jsx = null;
       break;
   }
   return jsx;
