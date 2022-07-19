@@ -5,7 +5,7 @@ const modalSlice = createSlice({
   name: "slice",
   initialState: {
     isOpen: true,
-    status: EStatus.ERROR,
+    status: EStatus.SUCCESS,
     title: "Modal Title",
     message: "Modal Message",
   } as IModal,

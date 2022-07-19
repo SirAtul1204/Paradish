@@ -21,6 +21,8 @@ const Modal = () => {
         return "OK";
       case "error":
         return "Close";
+      case "info":
+        return "OK";
       default:
         return "";
     }
