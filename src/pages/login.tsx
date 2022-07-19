@@ -5,6 +5,7 @@ import Nav from "../components/Nav";
 import PrimaryButton from "../components/PrimaryButton";
 import Title from "../components/Title";
 import styles from "../styles/Login-styles.module.css";
+import { EColor } from "../Utils/interface";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ const Login = () => {
     <div className="mainWrapper">
       <Nav />
       <div className={`${styles.major} mw-wrapper`}>
-        <Title content="Login to continue!" variant="h2" />
+        <Title color={EColor.WHITE} content="Login to continue!" variant="h2" />
         <Form>
           <Input
             content="Email"
