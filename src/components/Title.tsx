@@ -1,11 +1,10 @@
 import { FC } from "react";
 import styles from "../styles/Title-styles.module.css";
-import { EColor, TStyle } from "../Utils/interface";
 
 interface TitleProps {
   content: string;
   variant: "h1" | "h2";
-  color: TStyle;
+  color: "black" | "white" | "success" | "error" | "info";
 }
 
 const Title: FC<TitleProps> = ({ content, variant, color }) => {

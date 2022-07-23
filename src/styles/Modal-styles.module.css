@@ -20,11 +20,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 50%;
+  width: 40%;
   padding: 3%;
   background-color: var(--color-white);
   border-radius: var(--border-radius-big);
   gap: 1.5rem;
+}
+
+.iconWrapper {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+}
+
+.iconWrapper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .imgWrapper {

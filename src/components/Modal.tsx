@@ -2,16 +2,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../redux/reducers/modalReducer";
 import { RootState } from "../redux/store";
 import styles from "../styles/Modal-styles.module.css";
-import { EColor } from "../Utils/interface";
 import PrimaryButton from "./PrimaryButton";
 import Title from "./Title";
 import Type from "./Type";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const Modal = () => {
   const { isOpen, message, title, status } = useSelector(
     (state: RootState) => state.modalData
   );
+
+  const [icon, setIcon] = useState<{ src: string; alt: string }>({
+    src: "/assets/success.png",
+    alt: "success",
+  });
 
   const dispatch = useDispatch();
 
@@ -32,6 +37,22 @@ const Modal = () => {
     dispatch(closeModal());
   };
 
+  useEffect(() => {
+    switch (status) {
+      case "success":
+        setIcon({ src: "/assets/success.png", alt: "success" });
+        break;
+      case "error":
+        setIcon({ src: "/assets/error.png", alt: "error" });
+        break;
+      case "info":
+        setIcon({ src: "/assets/info.png", alt: "info" });
+        break;
+      default:
+        setIcon({ src: "", alt: "" });
+    }
+  }, [status]);
+
   if (!isOpen) return null;
 
   return (
@@ -40,8 +61,11 @@ const Modal = () => {
         className={`${styles.modal__content} ${`border-${status}-3`}`}
         onClick={(e) => e.stopPropagation()}
       >
+        <div className={styles.iconWrapper}>
+          <Image src={icon.src} alt={icon.alt} layout="fill" />
+        </div>
         <Title content={title} variant="h2" color={status} />
-        <Type content={message} color={EColor.BLACK} />
+        <Type content={message} color="black" />
         <PrimaryButton content={getBtnContent()} action={handleModalClose} />
         <div className={styles.imgWrapper} onClick={handleModalClose}>
           <Image src="/assets/close.png" alt="close-btn" layout="fill" />

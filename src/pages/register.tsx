@@ -9,9 +9,7 @@ import { emailValidator } from "../Utils/emailValidator";
 import { nameValidator } from "../Utils/nameValidator";
 import { passwordValidator } from "../Utils/passwordValidator";
 import { trpc } from "../Utils/trpc";
-import { HashLoader } from "react-spinners";
 import Loader from "../components/Loader";
-import { EColor } from "../Utils/interface";
 
 const Register = () => {
   const [restaurantName, setRestaurantName] = useState("");
@@ -65,7 +63,7 @@ const Register = () => {
         <Title
           content="Fill out this short form to get started today!"
           variant="h2"
-          color={EColor.WHITE}
+          color="white"
         />
         <Form>
           <Input

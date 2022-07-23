@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { EStatus, IModal } from "../../Utils/interface";
+import { IModal } from "../../Utils/interface";
 
 const modalSlice = createSlice({
   name: "slice",
   initialState: {
     isOpen: true,
-    status: EStatus.SUCCESS,
+    status: "success",
     title: "Modal Title",
     message: "Modal Message",
   } as IModal,
