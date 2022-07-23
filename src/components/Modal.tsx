@@ -7,6 +7,7 @@ import Title from "./Title";
 import Type from "./Type";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import StatusButton from "./StatusButton";
 
 const Modal = () => {
   const { isOpen, message, title, status } = useSelector(
@@ -34,7 +35,7 @@ const Modal = () => {
   };
 
   const handleModalClose = () => {
-    dispatch(closeModal());
+    // dispatch(closeModal());
   };
 
   useEffect(() => {
@@ -65,8 +66,12 @@ const Modal = () => {
           <Image src={icon.src} alt={icon.alt} layout="fill" />
         </div>
         <Title content={title} variant="h2" color={status} />
-        <Type content={message} color="black" />
-        <PrimaryButton content={getBtnContent()} action={handleModalClose} />
+        <Type content={message} color="white" />
+        <StatusButton
+          content={getBtnContent()}
+          action={handleModalClose}
+          status={status}
+        />
         <div className={styles.imgWrapper} onClick={handleModalClose}>
           <Image src="/assets/close.png" alt="close-btn" layout="fill" />
         </div>

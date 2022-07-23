@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import styles from "../styles/PrimaryButton-styles.module.css";
 interface PrimaryButtonProps {
   content: string;
