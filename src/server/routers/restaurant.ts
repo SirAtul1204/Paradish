@@ -28,7 +28,7 @@ export const restaurantRouter = createRouter().mutation("create", {
     if (owner)
       throw new trpc.TRPCError({
         code: "CONFLICT",
-        message: "User already exists",
+        message: "User already exists, try logging in",
       });
 
     const restaurant = await prisma?.restaurant.create({
@@ -51,6 +51,9 @@ export const restaurantRouter = createRouter().mutation("create", {
         message: "Couldn't make a restaurant",
       });
 
-    return { message: "SUCCESS", restaurantId: restaurant.id };
+    return {
+      message: "Account created successfully",
+      restaurantId: restaurant.id,
+    };
   },
 });

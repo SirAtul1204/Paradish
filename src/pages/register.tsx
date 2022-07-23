@@ -10,6 +10,11 @@ import { nameValidator } from "../Utils/nameValidator";
 import { passwordValidator } from "../Utils/passwordValidator";
 import { trpc } from "../Utils/trpc";
 import Loader from "../components/Loader";
+import { useDispatch } from "react-redux";
+import { openToast } from "../redux/reducers/toastReducer";
+import { useRouter } from "next/router";
+import { TRPCClientError } from "@trpc/client";
+import { openModal } from "../redux/reducers/modalReducer";
 
 const Register = () => {
   const [restaurantName, setRestaurantName] = useState("");
@@ -17,6 +22,9 @@ const Register = () => {
   const [ownerEmail, setOwnerEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const changeRestaurantName = (e: ChangeEvent<HTMLInputElement>) => {
     setRestaurantName(e.target.value.trimStart());
@@ -41,21 +49,38 @@ const Register = () => {
   const mutation = trpc.useMutation("restaurant.create");
 
   const handleRegister = async (e: SubmitEvent) => {
-    e.preventDefault();
-    const data = await mutation.mutateAsync({
-      restaurantName,
-      ownerEmail,
-      ownerName,
-      password,
-    });
+    try {
+      e.preventDefault();
+      const data = await mutation.mutateAsync({
+        restaurantName,
+        ownerEmail,
+        ownerName,
+        password,
+      });
 
-    console.log(data);
+      console.log(data);
+      if (data) {
+        dispatch(
+          openToast({
+            status: "success",
+            message: data.message,
+          })
+        );
+        router.push("/login");
+      }
+    } catch (e: any) {
+      dispatch(
+        openModal({
+          title: "Error",
+          message: e.message,
+          status: "error",
+        })
+      );
+    }
   };
 
-  return <Loader content="Creating your account!" />;
-
   if (mutation.isLoading) {
-    return <Loader />;
+    return <Loader content="Creating your account!" />;
   }
 
   return (

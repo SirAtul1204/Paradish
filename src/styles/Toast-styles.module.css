@@ -4,6 +4,8 @@
   top: 10%;
   right: 0;
   padding: 1%;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
   animation: fadeOut 1.5s linear forwards 1.5s;
 }
 
