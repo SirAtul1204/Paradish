@@ -52,6 +52,8 @@ const Register = () => {
     console.log(data);
   };
 
+  return <Loader content="Creating your account!" />;
+
   if (mutation.isLoading) {
     return <Loader />;
   }
