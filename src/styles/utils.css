@@ -37,3 +37,23 @@
 .border-info-3 {
   border: 3px ridge var(--color-primary);
 }
+
+.bg-white {
+  background-color: var(--color-white);
+}
+
+.bg-black {
+  background-color: var(--color-black);
+}
+
+.bg-error {
+  background-color: var(--color-red);
+}
+
+.bg-success {
+  background-color: var(--color-green);
+}
+
+.bg-info {
+  background-color: var(--color-primary);
+}

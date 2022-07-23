@@ -2,6 +2,7 @@ import { withTRPC } from "@trpc/next";
 import { AppType } from "next/dist/shared/lib/utils";
 import { Provider } from "react-redux";
 import Modal from "../components/Modal";
+import Toast from "../components/Toast";
 import store from "../redux/store";
 import { AppRouter } from "../server/routers/app";
 
@@ -13,6 +14,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <Provider store={store}>
       <Component {...pageProps} />
       <Modal />
+      <Toast />
     </Provider>
   );
 };

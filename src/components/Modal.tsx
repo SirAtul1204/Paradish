@@ -35,7 +35,7 @@ const Modal = () => {
   };
 
   const handleModalClose = () => {
-    // dispatch(closeModal());
+    dispatch(closeModal());
   };
 
   useEffect(() => {
