@@ -5,17 +5,19 @@ import Modal from "../components/Modal";
 import Toast from "../components/Toast";
 import store from "../redux/store";
 import { AppRouter } from "../server/routers/app";
-
+import { CookiesProvider } from "react-cookie";
 import "../styles/globals.css";
 import "../styles/utils.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-      <Modal />
-      <Toast />
-    </Provider>
+    <CookiesProvider>
+      <Provider store={store}>
+        <Component {...pageProps} />
+        <Modal />
+        <Toast />
+      </Provider>
+    </CookiesProvider>
   );
 };
 

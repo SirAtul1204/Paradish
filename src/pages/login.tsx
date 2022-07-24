@@ -34,7 +34,7 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-  const [] = useCookies();
+  const [cookie, setCookie, removeCookie] = useCookies();
 
   const handleLogin = async (e: SubmitEvent) => {
     try {
@@ -46,6 +46,7 @@ const Login = () => {
       });
 
       dispatch(openToast({ message, status: "success" }));
+      setCookie("token", token);
       router.push("/dashboard");
     } catch (e: any) {
       dispatch(
