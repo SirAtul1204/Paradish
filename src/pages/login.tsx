@@ -14,6 +14,7 @@ import styles from "../styles/Login-styles.module.css";
 import { emailValidator } from "../Utils/emailValidator";
 import { passwordValidator } from "../Utils/passwordValidator";
 import { trpc } from "../Utils/trpc";
+import { useCookies } from "react-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -33,6 +34,8 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
+  const [] = useCookies();
+
   const handleLogin = async (e: SubmitEvent) => {
     try {
       e.preventDefault();
@@ -43,7 +46,6 @@ const Login = () => {
       });
 
       dispatch(openToast({ message, status: "success" }));
-      dispatch(setToken(token));
       router.push("/dashboard");
     } catch (e: any) {
       dispatch(
