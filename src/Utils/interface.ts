@@ -7,3 +7,7 @@ export interface IToast {
   message: string;
   status: "error" | "success" | "info";
 }
+
+export interface IUser {
+  token?: string;
+}

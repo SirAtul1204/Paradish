@@ -4,7 +4,7 @@ import { IToast } from "../../Utils/interface";
 const toastSlice = createSlice({
   name: "toast",
   initialState: {
-    isOpen: true,
+    isOpen: false,
     status: "info",
     message: "Toast Message",
   } as IToast,
