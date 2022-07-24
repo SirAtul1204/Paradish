@@ -9,7 +9,13 @@ const toastSlice = createSlice({
     message: "Toast Message",
   } as IToast,
   reducers: {
-    openToast(state, action) {
+    openToast(
+      state,
+      action: {
+        type: string;
+        payload: { message: IToast["message"]; status: IToast["status"] };
+      }
+    ) {
       state.isOpen = true;
       state.message = action.payload.message;
       state.status = action.payload.status;

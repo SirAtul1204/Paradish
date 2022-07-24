@@ -42,7 +42,7 @@ const Login = () => {
         password,
       });
 
-      dispatch(openToast({ message, type: "success" }));
+      dispatch(openToast({ message, status: "success" }));
       dispatch(setToken(token));
       router.push("/dashboard");
     } catch (e: any) {
