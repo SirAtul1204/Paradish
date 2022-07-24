@@ -1,0 +1,36 @@
+.nav {
+  background-color: var(--color-black-bg);
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid var(--color-white);
+  height: max-content;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  list-style: none;
+  gap: 2rem;
+  margin: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.imgWrapper {
+  position: relative;
+  width: 10rem;
+  height: 6rem;
+}
+
+.imgWrapper:hover {
+  cursor: pointer;
+}

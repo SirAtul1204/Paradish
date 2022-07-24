@@ -1,0 +1,35 @@
+.major {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 2%;
+  padding: 2%; */
+  flex-grow: 1;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5%;
+  border-radius: var(--border-radius-big);
+  border: 2px solid var(--color-white);
+}
+
+.titleContainer {
+  text-align: center;
+}
+
+.imgWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 30rem;
+  width: 70rem;
+}
+
+.imgWrapper img {
+  display: inline-block;
+  border-radius: var(--border-radius-big);
+}

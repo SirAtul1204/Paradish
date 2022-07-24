@@ -1,0 +1,43 @@
+.container {
+  margin: 1%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 1.6rem;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.input {
+  border-radius: var(--border-radius);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  font-size: 2rem;
+  padding: 2% 3%;
+  width: 40rem;
+  border: none;
+  border-bottom: 5px solid transparent;
+  outline: none;
+  transition: all var(--normal-animation-time) ease;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.error {
+  border-bottom: 5px solid var(--color-red);
+}
+
+.success {
+  border-bottom: 5px solid var(--color-green);
+}
+
+.errorMsg {
+  color: var(--color-red);
+  width: 40rem;
+}

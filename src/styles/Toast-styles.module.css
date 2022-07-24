@@ -1,0 +1,38 @@
+.toast {
+  width: 25rem;
+  position: absolute;
+  top: 10%;
+  right: 0;
+  padding: 1%;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  animation: fadeOut 1.5s linear forwards 1.5s;
+}
+
+.progress {
+  height: 0.5rem;
+  width: 100%;
+  background: var(--color-white);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  animation: shrink 3s linear forwards;
+}
+
+@keyframes shrink {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
