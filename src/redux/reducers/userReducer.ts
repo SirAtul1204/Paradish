@@ -3,7 +3,7 @@ import { IUser } from "../../Utils/interface";
 
 const userSlice = createSlice({
   name: "user",
-  initialState: {} as IUser,
+  initialState: { token: "abs" } as IUser,
   reducers: {
     setToken(state, action) {
       state.token = action.payload;

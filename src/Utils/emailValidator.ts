@@ -18,7 +18,6 @@ export const emailValidator = (
     console.log(e);
     res[1] = JSON.parse(e)[0].message;
   } finally {
-    console.log(res);
     return res;
   }
 };
