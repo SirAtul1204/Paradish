@@ -61,6 +61,8 @@ const Login = () => {
           status: "error",
         })
       );
+
+      setIsLoading(false);
     }
   };
 
