@@ -13,7 +13,6 @@ import Loader from "../components/Loader";
 import { useDispatch } from "react-redux";
 import { openToast } from "../redux/reducers/toastReducer";
 import { useRouter } from "next/router";
-import { TRPCClientError } from "@trpc/client";
 import { openModal } from "../redux/reducers/modalReducer";
 
 const Register = () => {

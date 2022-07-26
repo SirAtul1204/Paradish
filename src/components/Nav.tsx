@@ -3,9 +3,21 @@ import PrimaryButton from "./PrimaryButton";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { openToast } from "../redux/reducers/toastReducer";
+import { signOut, useSession } from "next-auth/react";
 
 const Nav = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { status } = useSession();
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/login" });
+    dispatch(
+      openToast({ message: "Logged out successfully", status: "success" })
+    );
+  };
 
   return (
     <nav className={styles.nav}>
@@ -19,11 +31,12 @@ const Nav = () => {
                 className={styles.logo}
                 layout="fill"
                 objectFit="contain"
+                priority
               />
             </Link>
           </div>
           <ul className={styles.navLinks}>
-            {router.asPath !== "/login" && (
+            {router.asPath !== "/login" && status === "unauthenticated" && (
               <li className={styles.navLink}>
                 <PrimaryButton
                   content="Login"
@@ -33,7 +46,7 @@ const Nav = () => {
                 />
               </li>
             )}
-            {router.asPath !== "/register" && (
+            {router.asPath !== "/register" && status === "unauthenticated" && (
               <li className={styles.navLink}>
                 <PrimaryButton
                   content="Register"
@@ -41,6 +54,21 @@ const Nav = () => {
                     router.push("/register");
                   }}
                 />
+              </li>
+            )}
+            {router.asPath === "/" && status === "authenticated" && (
+              <li className={styles.navLink}>
+                <PrimaryButton
+                  content="Dashboard"
+                  action={() => {
+                    router.push("/dashboard");
+                  }}
+                />
+              </li>
+            )}
+            {router.asPath !== "/" && status === "authenticated" && (
+              <li className={styles.navLink}>
+                <PrimaryButton content="Logout" action={handleLogout} />
               </li>
             )}
           </ul>

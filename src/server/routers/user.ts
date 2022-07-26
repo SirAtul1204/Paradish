@@ -5,7 +5,6 @@ import { z } from "zod";
 import { prisma } from "../prisma";
 import { TRPCError } from "@trpc/server";
 import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
 
 export const userRouter = createRouter()
   .mutation("login", {
@@ -33,13 +32,9 @@ export const userRouter = createRouter()
           message: "Invalid password, please try again",
         });
 
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
-        expiresIn: "1h",
-      });
-
       return {
         message: "Login successful",
-        token,
+        userId: user.id,
       };
     },
   })
@@ -49,10 +44,8 @@ export const userRouter = createRouter()
     }),
     async resolve({ input }) {
       try {
-        const userId = jwt.verify(input.token ?? "", process.env.JWT_SECRET!);
         return {
           message: "Verification successful",
-          userId,
         };
       } catch (e: any) {
         throw new TRPCError({

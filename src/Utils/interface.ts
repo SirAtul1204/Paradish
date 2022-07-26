@@ -8,6 +8,7 @@ export interface IToast {
   status: "error" | "success" | "info";
 }
 
-export interface IUser {
-  token?: string;
+export interface IApp {
+  isAuthenticated: boolean;
+  isLoading: boolean;
 }

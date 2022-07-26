@@ -5,19 +5,19 @@ import Modal from "../components/Modal";
 import Toast from "../components/Toast";
 import store from "../redux/store";
 import { AppRouter } from "../server/routers/app";
-import { CookiesProvider } from "react-cookie";
 import "../styles/globals.css";
 import "../styles/utils.css";
+import { SessionProvider } from "next-auth/react";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <CookiesProvider>
+    <SessionProvider>
       <Provider store={store}>
         <Component {...pageProps} />
         <Modal />
         <Toast />
       </Provider>
-    </CookiesProvider>
+    </SessionProvider>
   );
 };
 

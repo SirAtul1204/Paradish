@@ -1,6 +1,3 @@
-import { NextPage } from "next";
-import { FC } from "react";
-import AuthHOC from "../components/AuthHOC";
 import Card from "../components/Card";
 import Nav from "../components/Nav";
 import styles from "../styles/Dashboard-styles.module.css";
@@ -18,4 +15,4 @@ const Dashboard = () => {
   );
 };
 
-export default AuthHOC({ Component: Dashboard });
+export default Dashboard;
