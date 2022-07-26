@@ -6,17 +6,22 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { openToast } from "../redux/reducers/toastReducer";
 import { signOut, useSession } from "next-auth/react";
+import Type from "./Type";
 
 const Nav = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { status } = useSession();
+  const { data, status } = useSession();
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/login" });
     dispatch(
       openToast({ message: "Logged out successfully", status: "success" })
     );
+  };
+
+  const goToProfile = () => {
+    router.push("/profile");
   };
 
   return (
@@ -54,6 +59,13 @@ const Nav = () => {
                     router.push("/register");
                   }}
                 />
+              </li>
+            )}
+            {status === "authenticated" && (
+              <li className={styles.navLink} onClick={goToProfile}>
+                <Link href="/profile">
+                  <Type color="white" content={data?.user?.name ?? ""} />
+                </Link>
               </li>
             )}
             {router.asPath === "/" && status === "authenticated" && (

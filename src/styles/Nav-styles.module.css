@@ -19,6 +19,11 @@
   font-weight: 800;
 }
 
+.navLink p:hover {
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
 .container {
   display: flex;
   align-items: center;
