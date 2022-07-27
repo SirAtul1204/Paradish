@@ -13,6 +13,7 @@ const Dashboard: NextPage = () => {
         <Card />
         <Card />
         <Card />
+        <Card />
       </div>
     </div>
   );
