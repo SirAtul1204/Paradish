@@ -21,8 +21,12 @@ const Dashboard: NextPage = () => {
 
 export default Dashboard;
 
-export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
-  const session = unstable_getServerSession(ctx.req, ctx.res, authOptions);
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const session = await unstable_getServerSession(
+    ctx.req,
+    ctx.res,
+    authOptions
+  );
 
   if (!session) {
     return {

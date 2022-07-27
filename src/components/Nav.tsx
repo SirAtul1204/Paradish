@@ -14,10 +14,10 @@ const Nav = () => {
   const { data, status } = useSession();
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/login" });
     dispatch(
       openToast({ message: "Logged out successfully", status: "success" })
     );
+    await signOut({ callbackUrl: "/login" });
   };
 
   const goToProfile = () => {
