@@ -1,0 +1,8 @@
+.major {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2%;
+  flex-direction: column;
+  gap: 4rem;
+}

@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 2px solid var(--color-white);
+  border-bottom: 5px solid var(--color-white);
   height: max-content;
 }
 
