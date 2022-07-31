@@ -1,25 +1,38 @@
 import { emailSchema } from "../../Utils/emailValidator";
-import { passwordSchema } from "../../Utils/passwordValidator";
 import { createRouter } from "../createRouter";
 import { z } from "zod";
 import { prisma } from "../prisma";
 import { TRPCError } from "@trpc/server";
-import * as bcrypt from "bcrypt";
 
-export const userRouter = createRouter().query("verify", {
+export const userRouter = createRouter().query("all-users", {
   input: z.object({
-    token: z.string().optional(),
+    userEmail: emailSchema,
   }),
   async resolve({ input }) {
-    try {
-      return {
-        message: "Verification successful",
-      };
-    } catch (e: any) {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: input.userEmail,
+      },
+    });
+
+    if (!user)
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "Invalid token, please try again",
+        message: "You are not authorized",
       });
-    }
+
+    const allUsers = await prisma.user.findMany({
+      where: {
+        restaurantId: user.restaurantId,
+      },
+    });
+
+    if (!allUsers)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Couldn't get users, wrong restaurant Id",
+      });
+
+    return allUsers;
   },
 });

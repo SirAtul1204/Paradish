@@ -41,6 +41,7 @@ export const authOptions: NextAuthOptions = {
               message: "Invalid password, please try again",
             });
           }
+
           return user;
         } catch (e: any) {
           return null;

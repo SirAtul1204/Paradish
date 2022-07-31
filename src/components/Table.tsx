@@ -1,6 +1,7 @@
 import styles from "../styles/Table-styles.module.css";
 import Image from "next/image";
 import { ChangeEvent, FC, useState } from "react";
+import StatusButton from "./StatusButton";
 
 interface TableProps {
   tableHeadings?: string[];
@@ -12,6 +13,10 @@ const Table: FC<TableProps> = ({ tableHeadings, tableData }) => {
 
   const changeSearchText = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value.trim());
+  };
+
+  const handleClear = () => {
+    setSearchText("");
   };
 
   return (
@@ -27,6 +32,11 @@ const Table: FC<TableProps> = ({ tableHeadings, tableData }) => {
           value={searchText}
           onChange={changeSearchText}
         />
+        {searchText && (
+          <div className={styles.btnContainer}>
+            <Image src="/assets/close.png" alt="close" layout="fill" />
+          </div>
+        )}
       </div>
       <div className={styles.major}>
         <table className={styles.table}>
@@ -42,7 +52,7 @@ const Table: FC<TableProps> = ({ tableHeadings, tableData }) => {
               (row, ind) =>
                 (searchText === "" ||
                   row.find((val) =>
-                    val.toLowerCase().includes(searchText.toLowerCase())
+                    val.toLowerCase().startsWith(searchText.toLowerCase())
                   )) && (
                   <tr key={row[0] + ind}>
                     {row.map((cell) => (

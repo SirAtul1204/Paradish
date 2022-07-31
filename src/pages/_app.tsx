@@ -9,6 +9,10 @@ import "../styles/globals.css";
 import "../styles/utils.css";
 import { SessionProvider } from "next-auth/react";
 
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <SessionProvider>

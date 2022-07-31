@@ -4,5 +4,18 @@
   justify-content: center;
   margin-top: 2%;
   flex-direction: column;
-  gap: 4rem;
+  gap: 2rem;
+  position: relative;
+}
+
+.btnContainer {
+  position: absolute;
+  bottom: 2rem;
+  width: var(--max-width);
+}
+
+.btnContainer button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

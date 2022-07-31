@@ -5,30 +5,54 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import styles from "../styles/Employees-styles.module.css";
 import Title from "../components/Title";
 import Table from "../components/Table";
-
+import { FC } from "react";
+import { trpc } from "../Utils/trpc";
+import Loader from "../components/Loader";
+import PrimaryButton from "../components/PrimaryButton";
 import * as faker from "faker";
 
-const generateTableData = () => {
-  const tableData = [];
+const generateEmployees = () => {
+  const employees = [];
   for (let i = 0; i < 100; i++) {
-    const row = [];
-    for (let j = 0; j < 5; j++) {
-      row.push(faker.random.word());
-    }
-    tableData.push(row);
+    employees.push([
+      faker.name.findName(),
+      faker.internet.email(),
+      faker.name.jobTitle(),
+    ]);
   }
-  return tableData;
+  return employees;
 };
+interface EmployeesProps {
+  userEmail: string;
+  userName: string;
+}
 
-const Employees = () => {
+const Employees: FC<EmployeesProps> = ({ userEmail, userName }) => {
+  const { data, isLoading } = trpc.useQuery(["user.all-users", { userEmail }]);
+
+  if (isLoading) {
+    return <Loader content="Loading employee details" />;
+  }
+
+  const handleAddEmployee = () => {};
+
   return (
     <div className="mainWrapper">
       <Nav />
       <div className={`${styles.major} mw-wrapper`}>
         <Title color="white" variant="h2" content="Employees" />
         <Table
-          tableHeadings={["ID", "NAME", "EMAIL", "ROLE", "ADDRESS"]}
-          tableData={generateTableData()}
+          tableHeadings={["NAME", "EMAIL", "ROLE"]}
+          tableData={generateEmployees()}
+          // tableData={data?.map((user) => [user.name, user.email, user.role])}
+        />
+      </div>
+      <div className={styles.btnContainer}>
+        <PrimaryButton
+          action={handleAddEmployee}
+          content="Add Employee"
+          type="button"
+          variant="big"
         />
       </div>
     </div>
@@ -44,13 +68,18 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     authOptions
   );
 
-  if (!session) {
+  if (!session || !session.user) {
     return {
       redirect: { permanent: false, destination: "/login" },
     };
   }
 
+  console.log(session);
+
   return {
-    props: {},
+    props: {
+      userEmail: session.user.email,
+      userName: session.user.name,
+    },
   };
 }
