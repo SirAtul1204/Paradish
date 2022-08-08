@@ -1,15 +1,16 @@
 import { GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";
-import Nav from "../components/Nav";
-import { authOptions } from "./api/auth/[...nextauth]";
-import styles from "../styles/Employees-styles.module.css";
-import Title from "../components/Title";
-import Table from "../components/Table";
+import Nav from "../../components/Nav";
+import { authOptions } from "../api/auth/[...nextauth]";
+import styles from "../../styles/Employees-styles.module.css";
+import Title from "../../components/Title";
+import Table from "../../components/Table";
 import { FC } from "react";
-import { trpc } from "../Utils/trpc";
-import Loader from "../components/Loader";
-import PrimaryButton from "../components/PrimaryButton";
+import { trpc } from "../../Utils/trpc";
+import Loader from "../../components/Loader";
+import PrimaryButton from "../../components/PrimaryButton";
 import * as faker from "faker";
+import { useRouter } from "next/router";
 
 const generateEmployees = () => {
   const employees = [];
@@ -30,11 +31,15 @@ interface EmployeesProps {
 const Employees: FC<EmployeesProps> = ({ userEmail, userName }) => {
   const { data, isLoading } = trpc.useQuery(["user.all-users", { userEmail }]);
 
+  const router = useRouter();
+
   if (isLoading) {
     return <Loader content="Loading employee details" />;
   }
 
-  const handleAddEmployee = () => {};
+  const handleAddEmployee = () => {
+    router.push("/employees/add");
+  };
 
   return (
     <div className="mainWrapper">
@@ -43,8 +48,8 @@ const Employees: FC<EmployeesProps> = ({ userEmail, userName }) => {
         <Title color="white" variant="h2" content="Employees" />
         <Table
           tableHeadings={["NAME", "EMAIL", "ROLE"]}
-          tableData={generateEmployees()}
-          // tableData={data?.map((user) => [user.name, user.email, user.role])}
+          // tableData={generateEmployees()}
+          tableData={data?.map((user) => [user.name, user.email, user.role])}
         />
       </div>
       <div className={styles.btnContainer}>
