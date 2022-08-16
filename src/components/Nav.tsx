@@ -68,7 +68,7 @@ const Nav = () => {
                 </Link>
               </li>
             )}
-            {router.asPath === "/" && status === "authenticated" && (
+            {router.asPath !== "/dashboard" && status === "authenticated" && (
               <li className={styles.navLink}>
                 <PrimaryButton
                   content="Dashboard"
@@ -78,7 +78,7 @@ const Nav = () => {
                 />
               </li>
             )}
-            {router.asPath !== "/" && status === "authenticated" && (
+            {status === "authenticated" && (
               <li className={styles.navLink}>
                 <PrimaryButton content="Logout" action={handleLogout} />
               </li>
