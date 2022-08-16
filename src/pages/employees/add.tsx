@@ -1,5 +1,6 @@
 import { Role } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import CheckBoxGroup from "../../components/CheckboxGroup";
 import Dropdown from "../../components/Dropdown";
 import Input, { InputProps } from "../../components/Input";
 import Nav from "../../components/Nav";
@@ -14,6 +15,22 @@ const AddEmployee = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<Role>();
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [checkboxes, setCheckboxes] = useState([
+    { label: "English", isChecked: false },
+    { label: "Hindi", isChecked: false },
+    { label: "Tamil", isChecked: false },
+  ]);
+
+  const updateLanguagesKnown = (language: string, checked: boolean) => {
+    const newCheckboxes = [...checkboxes];
+    newCheckboxes.forEach((checkbox) => {
+      if (checkbox.label === language) {
+        checkbox.isChecked = checked;
+      }
+    });
+
+    setCheckboxes(newCheckboxes);
+  };
 
   const inputs: InputProps[] = [
     {
@@ -48,11 +65,6 @@ const AddEmployee = () => {
     },
   ];
 
-  useEffect(() => {
-    console.log(firstName);
-    console.log(role);
-  });
-
   return (
     <div className="mainWrapper">
       <Nav />
@@ -68,6 +80,11 @@ const AddEmployee = () => {
               options={Object.keys(Role)}
               value={role}
               onSelect={(value?: Role) => setRole(value)}
+            />
+            <CheckBoxGroup
+              title="Languages Known"
+              checkboxes={checkboxes}
+              onChangeHandler={updateLanguagesKnown}
             />
           </div>
         </div>
