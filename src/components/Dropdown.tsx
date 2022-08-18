@@ -5,8 +5,8 @@ import styles from "../styles/Dropdown-styles.module.css";
 interface DropdownProps {
   label: string;
   options: string[];
-  value?: Role;
-  onSelect: (value?: Role) => void;
+  value: string;
+  onSelect: (value: string) => void;
 }
 
 const Dropdown: FC<DropdownProps> = ({ label, options, value, onSelect }) => {
@@ -16,7 +16,7 @@ const Dropdown: FC<DropdownProps> = ({ label, options, value, onSelect }) => {
       <select
         className={styles.select}
         value={value}
-        onChange={(e) => onSelect(e.target.value as Role)}
+        onChange={(e) => onSelect(e.target.value)}
       >
         <option className={styles.option} disabled selected>
           Select
