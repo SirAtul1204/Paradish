@@ -3,12 +3,15 @@ import { GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import CheckBoxGroup from "../../components/CheckboxGroup";
 import Dropdown from "../../components/Dropdown";
 import Input, { InputProps } from "../../components/Input";
 import Nav from "../../components/Nav";
 import PrimaryButton from "../../components/PrimaryButton";
 import Title from "../../components/Title";
+import Type from "../../components/Type";
+import { openModal } from "../../redux/reducers/modalReducer";
 import styles from "../../styles/AddEmployees-styles.module.css";
 import { emailValidator } from "../../Utils/emailValidator";
 import { nameValidator } from "../../Utils/nameValidator";
@@ -26,6 +29,9 @@ const AddEmployee = () => {
     { label: "Tamil", isChecked: false },
   ]);
   const [photo, setPhoto] = useState<File>();
+  const [pan, setPan] = useState("");
+  const [aadhar, setAadhar] = useState("");
+  const [address, setAddress] = useState("");
 
   const handlePhoto = () => {
     const input = document.createElement("input");
@@ -83,6 +89,28 @@ const AddEmployee = () => {
     },
   ];
 
+  const dispatch = useDispatch();
+
+  const handleSubmit = () => {
+    if (
+      nameValidator(firstName) &&
+      nameValidator(lastName) &&
+      emailValidator(email) &&
+      photo &&
+      pan &&
+      aadhar
+    ) {
+    } else {
+      dispatch(
+        openModal({
+          title: "Error",
+          message: "Please fill all the fields",
+          status: "error",
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     console.log(photo);
   });
@@ -133,11 +161,44 @@ const AddEmployee = () => {
                     </div>
                   )}
                 </div>
-                <PrimaryButton content="Capture!" action={() => {}} />
+                <Type
+                  color="white"
+                  content={
+                    photo
+                      ? "Click the image to upload a new photo"
+                      : "Upload Photo"
+                  }
+                />
               </div>
+              <Input
+                type="text"
+                content="PAN Number"
+                value={pan}
+                required
+                modifier={(e) => {
+                  setPan(e.target.value);
+                }}
+              />
+              <Input
+                type="text"
+                content="Aadhar Number"
+                value={aadhar}
+                required
+                modifier={(e) => {
+                  setAadhar(e.target.value);
+                }}
+              />
+              <Input
+                type="text"
+                content="Address"
+                value={address}
+                modifier={(e) => setAddress(e.target.value)}
+                required
+              />
             </div>
           </div>
         </div>
+        <PrimaryButton content="Add Employee" action={handleSubmit} />
       </div>
     </div>
   );
