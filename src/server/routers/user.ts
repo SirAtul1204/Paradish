@@ -6,8 +6,16 @@ import { TRPCError } from "@trpc/server";
 import { nameSchema } from "../../Utils/nameValidator";
 import { phoneSchema } from "../../Utils/phoneValidator";
 import { Role } from "@prisma/client";
+import generatePassword from "password-generator";
+import AWS from "aws-sdk";
+import { decode } from "js-base64";
 
 export const userRouter = createRouter()
+  .query("hello", {
+    async resolve() {
+      return "Hello World";
+    },
+  })
   .query("all-users", {
     input: z.object({
       userEmail: emailSchema,
@@ -52,7 +60,10 @@ export const userRouter = createRouter()
       pan: z.string().trim(),
       aadhar: z.string().trim(),
       languagesKnown: z.array(z.string().trim()),
-      photo: z.string(),
+      photo: z.object({
+        extension: z.string().trim(),
+        data: z.string().trim(),
+      }),
       address: z.string().trim(),
     }),
 
@@ -72,14 +83,21 @@ export const userRouter = createRouter()
 
       const user = await prisma.user.findFirst({
         where: {
-          email: input.creatorEmail,
+          OR: [
+            {
+              email: input.email,
+            },
+            {
+              phone: input.phoneNumber,
+            },
+          ],
         },
       });
 
       if (user)
         throw new TRPCError({
           code: "CONFLICT",
-          message: "User already exists",
+          message: "User with same email or phone already exists",
         });
 
       const newUser = await prisma.user.create({
@@ -88,12 +106,11 @@ export const userRouter = createRouter()
           name: `${input.firstName} ${input.lastName}`,
           role: input.role as Role,
           restaurantId: creator.restaurantId,
-          password: "",
+          password: generatePassword(),
           phone: input.phoneNumber,
           panNumber: input.pan,
           aadharNumber: input.aadhar,
           languagesKnown: input.languagesKnown.join(","),
-          photo: input.photo,
           address: input.address,
         },
       });
@@ -104,6 +121,49 @@ export const userRouter = createRouter()
           message: "Couldn't create user",
         });
 
+      const s3 = new AWS.S3({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      });
+
+      const base64Data = Buffer.from(
+        input.photo.data.replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+      );
+
+      s3.upload(
+        {
+          Bucket: "paradish",
+          Key: `profile_pictures/${newUser.id}.${input.photo.extension}`,
+          Body: base64Data,
+          ContentEncoding: "base64",
+          ContentType: `image/${input.photo.extension}`,
+        },
+        async (err, data) => {
+          if (err)
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Couldn't upload photo",
+            });
+          else {
+            const photoUrl = data.Location;
+            const updatedUser = await prisma.user.update({
+              where: {
+                id: newUser.id,
+              },
+              data: {
+                photo: photoUrl,
+              },
+            });
+
+            if (!updatedUser)
+              throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Couldn't update user",
+              });
+          }
+        }
+      );
       return { message: "User created successfully", user: newUser.id };
     },
   });

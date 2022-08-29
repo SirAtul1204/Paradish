@@ -15,9 +15,24 @@ import { openModal } from "../../redux/reducers/modalReducer";
 import styles from "../../styles/AddEmployees-styles.module.css";
 import { emailValidator } from "../../Utils/emailValidator";
 import { nameValidator } from "../../Utils/nameValidator";
+import { trpc } from "../../Utils/trpc";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { encode } from "js-base64";
+import Loader from "../../components/Loader";
+import { openToast } from "../../redux/reducers/toastReducer";
+import { useRouter } from "next/router";
+import { array } from "zod";
 
-const AddEmployee = () => {
+const AddEmployee = (props: { userEmail: string }) => {
+  const file2Base64 = (file: File): Promise<string> => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result?.toString() || "");
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -90,30 +105,68 @@ const AddEmployee = () => {
   ];
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  const handleSubmit = () => {
-    if (
-      nameValidator(firstName) &&
-      nameValidator(lastName) &&
-      emailValidator(email) &&
-      photo &&
-      pan &&
-      aadhar
-    ) {
-    } else {
+  const { mutateAsync, isLoading, isSuccess } = trpc.useMutation("user.create");
+
+  const handleSubmit = async () => {
+    try {
+      if (
+        !(
+          nameValidator(firstName) &&
+          nameValidator(lastName) &&
+          emailValidator(email) &&
+          photo &&
+          pan &&
+          aadhar &&
+          role
+        )
+      )
+        throw new Error("Please fill all the fields");
+
+      const data = await mutateAsync({
+        firstName,
+        lastName,
+        email,
+        role: role,
+        phoneNumber,
+        languagesKnown: checkboxes
+          .filter((checkbox) => checkbox.isChecked)
+          .map((checkbox) => checkbox.label),
+        pan,
+        aadhar,
+        address,
+        photo: {
+          extension: photo.type.split("/")[1],
+          data: await file2Base64(photo),
+        },
+        creatorEmail: props.userEmail,
+      });
+
+      if (data) {
+        dispatch(
+          openToast({
+            message: "Employee added successfully",
+            status: "success",
+          })
+        );
+        router.push("/employees");
+      }
+    } catch (e: any) {
+      console.log(e);
       dispatch(
         openModal({
           title: "Error",
-          message: "Please fill all the fields",
+          message: e.message,
           status: "error",
         })
       );
     }
   };
 
-  useEffect(() => {
-    console.log(photo);
-  });
+  if (isLoading || isSuccess) {
+    return <Loader content="Adding employee, Please Wait..." />;
+  }
 
   return (
     <div className="mainWrapper">
@@ -218,8 +271,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       redirect: { permanent: false, destination: "/login" },
     };
   }
-
-  console.log(session);
 
   return {
     props: {
