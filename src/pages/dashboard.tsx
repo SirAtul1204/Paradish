@@ -34,5 +34,5 @@ const Dashboard: NextPage<DefaultProps> = (props) => {
 export default Dashboard;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  return validateSession(ctx);
+  return await validateSession(ctx);
 };

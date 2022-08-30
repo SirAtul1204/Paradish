@@ -258,5 +258,5 @@ const AddEmployee: NextPage<DefaultProps> = (props) => {
 export default AddEmployee;
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  return validateSession(ctx);
+  return await validateSession(ctx);
 }

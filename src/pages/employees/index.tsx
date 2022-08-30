@@ -50,5 +50,5 @@ const Employees: NextPage<DefaultProps> = ({ userEmail }) => {
 export default Employees;
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  return validateSession(ctx);
+  return await validateSession(ctx);
 }

@@ -5,6 +5,6 @@ const Profile = () => {};
 
 export default Profile;
 
-export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
-  return validateSession(ctx);
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  return await validateSession(ctx);
 };
