@@ -8,12 +8,16 @@ import { phoneSchema } from "../../Utils/phoneValidator";
 import { Role } from "@prisma/client";
 import generatePassword from "password-generator";
 import AWS from "aws-sdk";
-import { decode } from "js-base64";
+import sendEmail from "../../Utils/sendEmail";
+import { EmailSubjects } from "../../Utils/interface";
+import { PasswordHtmlTemplate } from "../../Utils/htmlTemplates";
 
 export const userRouter = createRouter()
   .query("hello", {
     async resolve() {
-      return "Hello World";
+      console.log("hello");
+      // sendEmail({ subject: EmailSubjects.GetPassword });
+      return { msg: "Hello World" };
     },
   })
   .query("all-users", {
@@ -100,13 +104,15 @@ export const userRouter = createRouter()
           message: "User with same email or phone already exists",
         });
 
+      const password = generatePassword(6);
+
       const newUser = await prisma.user.create({
         data: {
           email: input.email,
           name: `${input.firstName} ${input.lastName}`,
           role: input.role as Role,
           restaurantId: creator.restaurantId,
-          password: generatePassword(),
+          password,
           phone: input.phoneNumber,
           panNumber: input.pan,
           aadharNumber: input.aadhar,
@@ -122,8 +128,8 @@ export const userRouter = createRouter()
         });
 
       const s3 = new AWS.S3({
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
       });
 
       const base64Data = Buffer.from(
@@ -140,12 +146,18 @@ export const userRouter = createRouter()
           ContentType: `image/${input.photo.extension}`,
         },
         async (err, data) => {
-          if (err)
+          if (err) {
+            await prisma.user.delete({
+              where: {
+                id: newUser.id,
+              },
+            });
+
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: "Couldn't upload photo",
             });
-          else {
+          } else {
             const photoUrl = data.Location;
             const updatedUser = await prisma.user.update({
               where: {
@@ -156,14 +168,42 @@ export const userRouter = createRouter()
               },
             });
 
-            if (!updatedUser)
+            if (!updatedUser) {
+              await prisma.user.delete({
+                where: {
+                  id: newUser.id,
+                },
+              });
+
               throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "Couldn't update user",
               });
+            }
           }
         }
       );
+
+      const restaurant = await prisma.restaurant.findFirst({
+        where: {
+          id: creator.restaurantId,
+        },
+      });
+
+      if (!restaurant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Couldn't find restaurant",
+        });
+
+      sendEmail({
+        subject: EmailSubjects.GetPassword,
+        email: input.email,
+        name: `${input.firstName}`,
+        restaurantName: restaurant.name,
+        htmlTemplate: PasswordHtmlTemplate(password),
+      });
+
       return { message: "User created successfully", user: newUser.id };
     },
   });

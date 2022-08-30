@@ -12,3 +12,8 @@ export interface IApp {
   isAuthenticated: boolean;
   isLoading: boolean;
 }
+
+export enum EmailSubjects {
+  GetPassword = "Your Paradish Password",
+  Register = "Welcome to Paradish",
+}
