@@ -11,6 +11,7 @@ import Loader from "../../components/Loader";
 import PrimaryButton from "../../components/PrimaryButton";
 import * as faker from "faker";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const generateEmployees = () => {
   const employees = [];
@@ -33,13 +34,13 @@ const Employees: FC<EmployeesProps> = ({ userEmail, userName }) => {
 
   const router = useRouter();
 
-  if (isLoading) {
-    return <Loader content="Loading employee details" />;
-  }
-
   const handleAddEmployee = () => {
     router.push("/employees/add");
   };
+
+  if (isLoading) {
+    return <Loader content="Loading employee details" />;
+  }
 
   return (
     <div className="mainWrapper">
@@ -50,6 +51,7 @@ const Employees: FC<EmployeesProps> = ({ userEmail, userName }) => {
           tableHeadings={["NAME", "EMAIL", "ROLE"]}
           // tableData={generateEmployees()}
           tableData={data?.map((user) => [user.name, user.email, user.role])}
+          routes={data?.map((user) => `/employees/profile/${user.id}`)}
         />
       </div>
       <div className={styles.btnContainer}>

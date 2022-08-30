@@ -2,13 +2,17 @@ import styles from "../styles/Table-styles.module.css";
 import Image from "next/image";
 import { ChangeEvent, FC, useState } from "react";
 import StatusButton from "./StatusButton";
+import { useRouter } from "next/router";
 
 interface TableProps {
   tableHeadings?: string[];
   tableData?: string[][];
+  routes?: string[];
 }
 
-const Table: FC<TableProps> = ({ tableHeadings, tableData }) => {
+const Table: FC<TableProps> = ({ tableHeadings, tableData, routes }) => {
+  const router = useRouter();
+
   const [searchText, setSearchText] = useState("");
 
   const changeSearchText = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +57,29 @@ const Table: FC<TableProps> = ({ tableHeadings, tableData }) => {
                 (searchText === "" ||
                   row.find((val) =>
                     val.toLowerCase().startsWith(searchText.toLowerCase())
-                  )) && (
+                  )) &&
+                routes &&
+                routes.length > 0 && (
+                  <tr
+                    key={row[0] + ind}
+                    onClick={() => router.push(routes[ind])}
+                  >
+                    {row.map((cell) => (
+                      <td key={cell} className={styles.td}>
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                )
+            )}
+
+            {tableData?.map(
+              (row, ind) =>
+                (searchText === "" ||
+                  row.find((val) =>
+                    val.toLowerCase().startsWith(searchText.toLowerCase())
+                  )) &&
+                (!routes || routes.length === 0) && (
                   <tr key={row[0] + ind}>
                     {row.map((cell) => (
                       <td key={cell} className={styles.td}>

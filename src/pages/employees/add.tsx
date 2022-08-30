@@ -22,6 +22,7 @@ import Loader from "../../components/Loader";
 import { openToast } from "../../redux/reducers/toastReducer";
 import { useRouter } from "next/router";
 import { array } from "zod";
+import validateSession from "../../Utils/validateSession";
 
 const AddEmployee = (props: { userEmail: string }) => {
   const file2Base64 = (file: File): Promise<string> => {
@@ -260,22 +261,5 @@ const AddEmployee = (props: { userEmail: string }) => {
 export default AddEmployee;
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    ctx.req,
-    ctx.res,
-    authOptions
-  );
-
-  if (!session || !session.user) {
-    return {
-      redirect: { permanent: false, destination: "/login" },
-    };
-  }
-
-  return {
-    props: {
-      userEmail: session.user.email,
-      userName: session.user.name,
-    },
-  };
+  return validateSession(ctx);
 }

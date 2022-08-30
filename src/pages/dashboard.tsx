@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Card from "../components/Card";
 import Nav from "../components/Nav";
 import styles from "../styles/Dashboard-styles.module.css";
+import validateSession from "../Utils/validateSession";
 import { authOptions } from "./api/auth/[...nextauth]";
 
 const Dashboard: NextPage = () => {
@@ -32,19 +33,5 @@ const Dashboard: NextPage = () => {
 export default Dashboard;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const session = await unstable_getServerSession(
-    ctx.req,
-    ctx.res,
-    authOptions
-  );
-
-  if (!session) {
-    return {
-      redirect: { permanent: false, destination: "/login" },
-    };
-  }
-
-  return {
-    props: {},
-  };
+  return validateSession(ctx);
 };
