@@ -1,8 +1,7 @@
 import { Role } from "@prisma/client";
-import { GetServerSidePropsContext } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { GetServerSidePropsContext, NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import CheckBoxGroup from "../../components/CheckboxGroup";
 import Dropdown from "../../components/Dropdown";
@@ -16,15 +15,13 @@ import styles from "../../styles/AddEmployees-styles.module.css";
 import { emailValidator } from "../../Utils/emailValidator";
 import { nameValidator } from "../../Utils/nameValidator";
 import { trpc } from "../../Utils/trpc";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { encode } from "js-base64";
 import Loader from "../../components/Loader";
 import { openToast } from "../../redux/reducers/toastReducer";
 import { useRouter } from "next/router";
-import { array } from "zod";
 import validateSession from "../../Utils/validateSession";
+import { DefaultProps } from "../../Utils/interface";
 
-const AddEmployee = (props: { userEmail: string }) => {
+const AddEmployee: NextPage<DefaultProps> = (props) => {
   const file2Base64 = (file: File): Promise<string> => {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();

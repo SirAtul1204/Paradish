@@ -4,10 +4,11 @@ import { useRouter } from "next/router";
 import Card from "../components/Card";
 import Nav from "../components/Nav";
 import styles from "../styles/Dashboard-styles.module.css";
+import { DefaultProps } from "../Utils/interface";
 import validateSession from "../Utils/validateSession";
 import { authOptions } from "./api/auth/[...nextauth]";
 
-const Dashboard: NextPage = () => {
+const Dashboard: NextPage<DefaultProps> = (props) => {
   const router = useRouter();
 
   const cards = [

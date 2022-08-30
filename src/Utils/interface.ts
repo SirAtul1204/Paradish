@@ -17,3 +17,8 @@ export enum EmailSubjects {
   GetPassword = "Your Paradish Password",
   Register = "Welcome to Paradish",
 }
+
+export interface DefaultProps {
+  userEmail: string;
+  userName: string;
+}
