@@ -6,11 +6,13 @@ import { TRPCError } from "@trpc/server";
 import { nameSchema } from "../../Utils/nameValidator";
 import { phoneSchema } from "../../Utils/phoneValidator";
 import { Role } from "@prisma/client";
-import generatePassword from "password-generator";
 import AWS from "aws-sdk";
 import sendEmail from "../../Utils/sendEmail";
 import { EmailSubjects } from "../../Utils/interface";
-import { PasswordHtmlTemplate } from "../../Utils/htmlTemplates";
+import { newUserHtmlTemplate } from "../../Utils/htmlTemplates";
+import generatePassword from "password-generator";
+import { passwordSchema } from "../../Utils/passwordValidator";
+import * as bcrypt from "bcrypt";
 
 export const userRouter = createRouter()
   .query("hello", {
@@ -104,11 +106,7 @@ export const userRouter = createRouter()
           message: "User with same email or phone already exists",
         });
 
-      const password = generatePassword(
-        7,
-        true,
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
-      );
+      const password = generatePassword(6, true);
 
       const newUser = await prisma.user.create({
         data: {
@@ -205,9 +203,54 @@ export const userRouter = createRouter()
         email: input.email,
         name: `${input.firstName}`,
         restaurantName: restaurant.name,
-        htmlTemplate: PasswordHtmlTemplate(password),
+        htmlTemplate: newUserHtmlTemplate(input.firstName, password),
       });
 
       return { message: "User created successfully", user: newUser.id };
+    },
+  })
+  .mutation("reset-password", {
+    input: z.object({
+      email: emailSchema,
+      token: z.string().trim(),
+      password: passwordSchema,
+    }),
+    async resolve({ input }) {
+      const user = await prisma.user.findFirst({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (!user)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Couldn't find user",
+        });
+
+      if (user.password !== input.token)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid token",
+        });
+
+      const hashedPassword = await bcrypt.hash(input.password, 10);
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          password: hashedPassword,
+        },
+      });
+
+      if (!updatedUser)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Couldn't update user",
+        });
+
+      return { message: "Password updated successfully" };
     },
   });

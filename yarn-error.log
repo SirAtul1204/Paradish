@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Users\asatu\AppData\Local\fnm_multishells\2348_1661682783259\node.exe C:\Users\asatu\AppData\Local\fnm_multishells\2348_1661682783259\node_modules\yarn\bin\yarn.js add @types/sib-api-v3-sdk --dev
+  C:\Users\asatu\AppData\Local\fnm_multishells\2348_1661682783259\node.exe C:\Users\asatu\AppData\Local\fnm_multishells\2348_1661682783259\node_modules\yarn\bin\yarn.js add passwors-generator
 
 PATH: 
   C:\Users\asatu\AppData\Local\fnm_multishells\2348_1661682783259;C:\ProgramData\Miniconda3;C:\ProgramData\Miniconda3\Library\mingw-w64\bin;C:\ProgramData\Miniconda3\Library\usr\bin;C:\ProgramData\Miniconda3\Library\bin;C:\ProgramData\Miniconda3\Scripts;C:\ProgramData\Miniconda3\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\VMware\VMware Player\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\MinGW\bin;C:\;C:\Program Files\MongoDB\Server\4.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Program Files\PostgreSQL\13\scripts;C:\Users\asatu\AppData\Local\Programs\MiKTeX\miktex\bin\x64;C:\Program Files\Pandoc\pandoc.exe;C:\Program Files (x86)\dotnet;C:\flutter_windows_2.2.3-stable\flutter\bin;C:\Users\asatu\Downloads\Compressed\pulseaudio-1.1\bin;C:\Users\asatu\AppData\Local\Android\Sdk\platform-tools;C:\ProgramData\chocolatey\bin;C:\ProgramData\Miniconda3\Library\bin;C:\ProgramData\Miniconda3\Scripts;C:\ProgramData\Miniconda3\condabin;C:\Program Files\Git\cmd;C:\Users\asatu;C:\Program Files\Go\bin;C:\Users\asatu\Downloads\php-8.1.4-Win32-vs16-x64;C:\Users\asatu\Downloads\ngrok-stable-windows-amd64;C:\Program Files\Java\jdk-18.0.1\bin;C:\apache-maven-3.8.5-bin\apache-maven-3.8.5\bin;C:\pscale_0.111.0_windows_amd64;C:\Users\asatu\AppData\Local\Microsoft\WindowsApps;C:\Users\asatu\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\asatu\AppData\Local\Programs\mongosh;C:\Users\asatu\go\bin;C:\tools\neovim\nvim-win64\bin;C:\tools\mysql\current\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fsib-api-v3-sdk: Not found
+  Error: https://registry.yarnpkg.com/passwors-generator: Not found
       at Request.params.callback [as _callback] (C:\Users\asatu\AppData\Roaming\fnm\node-versions\v16.13.2\installation\node_modules\yarn\lib\cli.js:66145:18)
       at Request.self.callback (C:\Users\asatu\AppData\Roaming\fnm\node-versions\v16.13.2\installation\node_modules\yarn\lib\cli.js:140890:22)
       at Request.emit (node:events:390:28)
@@ -51,7 +51,6 @@ npm manifest:
       "js-base64": "^3.7.2",
       "next": "12.1.6",
       "next-auth": "^4.10.2",
-      "password-generator": "^2.3.2",
       "react": "18.1.0",
       "react-dom": "18.1.0",
       "react-query": "^3.39.2",
@@ -1997,11 +1996,6 @@ Lockfile:
     integrity sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==
     dependencies:
       callsites "^3.0.0"
-  
-  password-generator@^2.3.2:
-    version "2.3.2"
-    resolved "https://registry.yarnpkg.com/password-generator/-/password-generator-2.3.2.tgz#9626f778d64d26f7c2f73b64389407e28f62eecd"
-    integrity sha512-kJWUrdveSAqHCeWJWnv5vNc89hFHM5au+pvKja5+xCTxlRF3zQaecJlR6hSoOotAJtQ3otQq4/Q4iWc/TxsXhA==
   
   path-exists@^3.0.0:
     version "3.0.0"
