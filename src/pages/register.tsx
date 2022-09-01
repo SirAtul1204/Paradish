@@ -68,6 +68,7 @@ const Register = () => {
         router.push("/login");
       }
     } catch (e: any) {
+      console.log(e);
       dispatch(
         openModal({
           title: "Error",
