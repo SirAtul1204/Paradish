@@ -7,6 +7,7 @@ import store from "../redux/store";
 import { AppRouter } from "../server/routers/app";
 import "../styles/globals.css";
 import "../styles/utils.css";
+import "../styles/fonts.css";
 import { SessionProvider } from "next-auth/react";
 
 (BigInt.prototype as any).toJSON = function () {
@@ -46,5 +47,5 @@ export default withTRPC<AppRouter>({
   /**
    * @link https://trpc.io/docs/ssr
    */
-  ssr: true,
+  ssr: false,
 })(MyApp);
