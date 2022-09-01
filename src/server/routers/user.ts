@@ -104,7 +104,11 @@ export const userRouter = createRouter()
           message: "User with same email or phone already exists",
         });
 
-      const password = generatePassword(6);
+      const password = generatePassword(
+        7,
+        true,
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
+      );
 
       const newUser = await prisma.user.create({
         data: {

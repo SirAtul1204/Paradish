@@ -61,6 +61,7 @@ const Table: FC<TableProps> = ({ tableHeadings, tableData, routes }) => {
                 routes &&
                 routes.length > 0 && (
                   <tr
+                    className={styles.tr}
                     key={row[0] + ind}
                     onClick={() => router.push(routes[ind])}
                   >
@@ -80,7 +81,7 @@ const Table: FC<TableProps> = ({ tableHeadings, tableData, routes }) => {
                     val.toLowerCase().startsWith(searchText.toLowerCase())
                   )) &&
                 (!routes || routes.length === 0) && (
-                  <tr key={row[0] + ind}>
+                  <tr className={styles.tr} key={row[0] + ind}>
                     {row.map((cell) => (
                       <td key={cell} className={styles.td}>
                         {cell}

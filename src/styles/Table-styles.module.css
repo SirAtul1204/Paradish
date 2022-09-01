@@ -66,6 +66,7 @@
   padding: 1%;
 }
 
+.tr:hover td,
 .td:hover,
 .td:hover ~ .td {
   cursor: pointer;
