@@ -253,4 +253,68 @@ export const userRouter = createRouter()
 
       return { message: "Password updated successfully" };
     },
+  })
+  .query("get-by-id", {
+    input: z.object({
+      id: z.number(),
+      creatorEmail: emailSchema,
+    }),
+    async resolve({ input }) {
+      const creator = await prisma.user.findFirst({
+        where: {
+          email: input.creatorEmail,
+        },
+      });
+
+      if (!creator)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized",
+        });
+
+      if (
+        !(
+          creator.role === Role.OWNER ||
+          creator.role === Role.MANAGER ||
+          Number(creator.id) === input.id
+        )
+      )
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to view this content",
+        });
+
+      const user = await prisma.user.findFirst({
+        where: {
+          id: input.id,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          role: true,
+          aadharNumber: true,
+          panNumber: true,
+          address: true,
+          languagesKnown: true,
+          photo: true,
+          restaurantId: true,
+        },
+      });
+
+      if (!user)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Couldn't find user",
+        });
+
+      if (user.restaurantId !== creator.restaurantId)
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Requested user doesn't belong to your restaurant",
+        });
+
+      return user;
+    },
   });
