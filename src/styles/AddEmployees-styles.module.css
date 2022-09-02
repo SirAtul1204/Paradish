@@ -1,0 +1,81 @@
+.major {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2%;
+  gap: 1rem;
+}
+
+.formContainer {
+  border: 2px solid var(--color-white);
+  padding: 0.5%;
+  width: 100%;
+  border-radius: var(--border-radius);
+  background-color: var(--color-primary);
+  animation: pulsateBg 30s ease-in-out infinite;
+}
+
+.form {
+  border: 2px solid var(--color-white);
+  display: flex;
+  padding: 0.5%;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: var(--border-radius);
+  background-color: var(--color-black-bg);
+}
+
+.left,
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.photoHolder {
+  width: 2in;
+  height: 2in;
+  border: 2px dashed var(--color-white);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  filter: hue-rotate(230deg);
+  opacity: 0.3;
+  transition: all var(--normal-animation-time) ease-in-out;
+}
+
+.photo:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+@keyframes pulsateBg {
+  0% {
+    background-color: var(--color-primary);
+  }
+
+  50% {
+    background-color: var(--color-secondary);
+  }
+
+  100% {
+    background-color: var(--color-primary);
+  }
+}

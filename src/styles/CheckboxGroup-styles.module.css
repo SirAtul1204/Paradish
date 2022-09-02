@@ -1,0 +1,60 @@
+.checkboxGroup {
+  margin: 1%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 1.6rem;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.checkboxes {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.checkbox {
+  visibility: hidden;
+  width: 0px;
+  opacity: 0;
+}
+
+.fakeCheckbox {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fakeCheckbox:hover {
+  cursor: pointer;
+}
+
+.fakeCheckbox img {
+  filter: invert(1);
+}
+
+.fakeCheckboxActive {
+  background: var(--color-primary);
+}
+
+.label:hover {
+  cursor: pointer;
+}

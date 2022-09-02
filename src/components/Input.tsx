@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import styles from "../styles/Input-styles.module.css";
 import basicValidator from "../Utils/basicValidator";
 
-interface InputProps {
+export interface InputProps {
   value: string;
   modifier: (e: any) => void;
   type: "text" | "number" | "email" | "password";
@@ -39,7 +39,6 @@ const Input: FC<InputProps> = ({
       setErrorMsg(value === isEqualTo ? null : "Passwords don't match");
     } else if (type !== "password") {
       setIsValid(basicValidator(value));
-      setErrorMsg("Removing leading and trailing white spaces");
     }
   };
 

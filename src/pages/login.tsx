@@ -3,21 +3,25 @@ import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import Form from "../components/Form";
 import Input from "../components/Input";
-import Loader from "../components/Loader";
 import Nav from "../components/Nav";
 import PrimaryButton from "../components/PrimaryButton";
 import Title from "../components/Title";
 import { openModal } from "../redux/reducers/modalReducer";
 import { openToast } from "../redux/reducers/toastReducer";
-import { setToken } from "../redux/reducers/userReducer";
 import styles from "../styles/Login-styles.module.css";
 import { emailValidator } from "../Utils/emailValidator";
 import { passwordValidator } from "../Utils/passwordValidator";
-import { trpc } from "../Utils/trpc";
+import { signIn } from "next-auth/react";
+import { unstable_getServerSession } from "next-auth";
+import { GetServerSidePropsContext } from "next";
+import { authOptions } from "./api/auth/[...nextauth]";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const changeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value.trim());
@@ -27,8 +31,6 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const mutation = trpc.useMutation(["user.login"]);
-
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -36,14 +38,20 @@ const Login = () => {
   const handleLogin = async (e: SubmitEvent) => {
     try {
       e.preventDefault();
-
-      const { message, token } = await mutation.mutateAsync({
+      setIsLoading(true);
+      const options = await signIn("credentials", {
         email,
         password,
+        redirect: false,
       });
+      if (!options || !options.ok) throw new Error("Wrong Credentials");
 
-      dispatch(openToast({ message, type: "success" }));
-      dispatch(setToken(token));
+      dispatch(
+        openToast({
+          message: "You are logged in successfully",
+          status: "success",
+        })
+      );
       router.push("/dashboard");
     } catch (e: any) {
       dispatch(
@@ -53,10 +61,12 @@ const Login = () => {
           status: "error",
         })
       );
+
+      setIsLoading(false);
     }
   };
 
-  if (mutation.isLoading) {
+  if (isLoading) {
     return <Loader content="Logging you in!" />;
   }
 
@@ -88,3 +98,22 @@ const Login = () => {
 };
 
 export default Login;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  console.log("Session", session);
+  if (session) {
+    return {
+      redirect: { permanent: false, destination: "/dashboard" },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}

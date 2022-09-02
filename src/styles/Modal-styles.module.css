@@ -22,8 +22,7 @@
   justify-content: center;
   width: 40%;
   padding: 3%;
-  /* background-color: var(--color-white); */
-  background: url("/assets/modal-background.jpg") no-repeat;
+  background-color: var(--color-black-bg);
   background-size: cover;
   border-radius: var(--border-radius-big);
   gap: 1.5rem;

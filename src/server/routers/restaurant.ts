@@ -7,6 +7,9 @@ import { Role } from "@prisma/client";
 import { emailSchema } from "../../Utils/emailValidator";
 import { nameSchema } from "../../Utils/nameValidator";
 import { passwordSchema } from "../../Utils/passwordValidator";
+import sendEmail from "../../Utils/sendEmail";
+import { RegisterHtmlTemplate } from "../../Utils/htmlTemplates";
+import { EmailSubjects } from "../../Utils/interface";
 
 export const restaurantRouter = createRouter().mutation("create", {
   input: z.object({
@@ -31,7 +34,7 @@ export const restaurantRouter = createRouter().mutation("create", {
         message: "User already exists, try logging in",
       });
 
-    const restaurant = await prisma?.restaurant.create({
+    const restaurant = await prisma.restaurant.create({
       data: {
         name: input.restaurantName,
         employees: {
@@ -50,6 +53,14 @@ export const restaurantRouter = createRouter().mutation("create", {
         code: "INTERNAL_SERVER_ERROR",
         message: "Couldn't make a restaurant",
       });
+
+    // sendEmail({
+    //   email: input.ownerEmail,
+    //   name: input.ownerName,
+    //   subject: EmailSubjects.Register,
+    //   restaurantName: input.restaurantName,
+    //   htmlTemplate: RegisterHtmlTemplate(input.ownerName, input.restaurantName),
+    // });
 
     return {
       message: "Account created successfully",

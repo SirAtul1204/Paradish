@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 2px solid var(--color-white);
+  border-bottom: 5px solid var(--color-white);
   height: max-content;
 }
 
@@ -17,6 +17,11 @@
   margin: 0.5rem;
   font-size: 1.5rem;
   font-weight: 800;
+}
+
+.navLink p:hover {
+  cursor: pointer;
+  color: var(--color-primary);
 }
 
 .container {

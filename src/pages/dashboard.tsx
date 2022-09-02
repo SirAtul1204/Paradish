@@ -1,24 +1,31 @@
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
+import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import Card from "../components/Card";
 import Nav from "../components/Nav";
-import store, { RootState } from "../redux/store";
 import styles from "../styles/Dashboard-styles.module.css";
+import { DefaultProps } from "../Utils/interface";
+import validateSession from "../Utils/validateSession";
+import { authOptions } from "./api/auth/[...nextauth]";
 
-const Dashboard = () => {
-  const { token } = useSelector((state: RootState) => state.userData);
-
+const Dashboard: NextPage<DefaultProps> = (props) => {
   const router = useRouter();
 
+  const cards = [
+    {
+      title: "Employees",
+      img: "/assets/employee.png",
+      onClickHandler: () => router.push("/employees"),
+    },
+  ];
+
   return (
-    <div className="mainWrapper bg-tertiary">
+    <div className="mainWrapper">
       <Nav />
       <div className={`${styles.major} mw-wrapper`}>
-        <Card />
-        <Card />
-        <Card />
+        {cards.map((card) => (
+          <Card key={card.title} {...card} />
+        ))}
       </div>
     </div>
   );
@@ -26,10 +33,6 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-export function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const { token } = store.getState().userData;
-  console.log(token);
-  if (!token) return { redirect: { permanent: false, destination: "/login" } };
-  req.headers.authorization = token;
-  return { props: {} };
-}
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  return await validateSession(ctx);
+};

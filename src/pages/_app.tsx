@@ -5,17 +5,24 @@ import Modal from "../components/Modal";
 import Toast from "../components/Toast";
 import store from "../redux/store";
 import { AppRouter } from "../server/routers/app";
-
 import "../styles/globals.css";
 import "../styles/utils.css";
+import "../styles/fonts.css";
+import { SessionProvider } from "next-auth/react";
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-      <Modal />
-      <Toast />
-    </Provider>
+    <SessionProvider>
+      <Provider store={store}>
+        <Component {...pageProps} />
+        <Modal />
+        <Toast />
+      </Provider>
+    </SessionProvider>
   );
 };
 
@@ -25,8 +32,8 @@ export default withTRPC<AppRouter>({
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
      */
-    const url = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}/api/trpc`
+    const url = process.env.NEXT_PUBLIC_DEPLOYED_URL
+      ? `https://${process.env.NEXT_PUBLIC_DEPLOYED_URL}/api/trpc`
       : "http://localhost:3000/api/trpc";
 
     return {

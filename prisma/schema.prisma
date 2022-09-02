@@ -16,15 +16,24 @@ model Restaurant {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  name         String
-  email        String     @unique
-  password     String
-  role         Role
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  restaurantId String
+  id             BigInt     @id @default(autoincrement())
+  name           String
+  email          String     @unique
+  password       String
+  role           Role
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId   String
+  address        String?
+  phone          String?
+  languagesKnown String?
+  photo          String?
+  panNumber      String?
+  aadharNumber   String?
 }
 
 enum Role {
   OWNER
+  MANAGER
+  WAITER
+  CHEF
 }

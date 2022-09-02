@@ -39,7 +39,7 @@ a:link {
 
 .mw-wrapper {
   width: 100%;
-  max-width: 120rem;
+  max-width: var(--max-width);
 }
 
 :root {
@@ -61,4 +61,11 @@ a:link {
 
   --box-shadow-light: 0px 2px 8px 0px rgba(255, 255, 255, 0.535);
   --box-shadow-dark: 0px 2px 8px 0px rgba(0, 0, 0, 0.535);
+
+  --max-width: 120rem;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
