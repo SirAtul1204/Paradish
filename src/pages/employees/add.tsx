@@ -20,6 +20,7 @@ import { openToast } from "../../redux/reducers/toastReducer";
 import { useRouter } from "next/router";
 import validateSession from "../../Utils/validateSession";
 import { DefaultProps } from "../../Utils/interface";
+import validateRole from "../../Utils/validateRole";
 
 const AddEmployee: NextPage<DefaultProps> = (props) => {
   const file2Base64 = (file: File): Promise<string> => {
@@ -258,5 +259,7 @@ const AddEmployee: NextPage<DefaultProps> = (props) => {
 export default AddEmployee;
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  return await validateSession(ctx);
+  const res = await validateSession(ctx);
+  if (res.redirect) return res;
+  return await validateRole(res.props.userEmail!, [Role.OWNER, Role.MANAGER]);
 }

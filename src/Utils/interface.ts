@@ -21,4 +21,5 @@ export enum EmailSubjects {
 export interface DefaultProps {
   userEmail: string;
   userName: string;
+  userRole?: string;
 }
