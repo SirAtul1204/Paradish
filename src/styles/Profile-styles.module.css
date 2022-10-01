@@ -1,13 +1,29 @@
 .major {
   display: flex;
   margin-top: 4%;
+  margin-bottom: 4%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .table {
-  border: 2px solid var(--color-white);
   border-collapse: collapse;
 }
 
 .td {
-  padding: 3%;
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+  font-size: 1.8rem;
+  box-sizing: border-box;
+  padding: 1rem 2rem;
+}
+
+.colored {
+  color: var(--color-secondary);
+  text-transform: capitalize;
+}
+
+.profilePic {
+  width: 50%;
 }

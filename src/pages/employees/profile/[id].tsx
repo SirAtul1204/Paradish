@@ -7,6 +7,8 @@ import styles from "../../../styles/Profile-styles.module.css";
 import { trpc } from "../../../Utils/trpc";
 import { useRouter } from "next/router";
 import Loader from "../../../components/Loader";
+import { camelToTitle } from "../../../Utils/camelToTitle";
+import Title from "../../../components/Title";
 
 const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
   const router = useRouter();
@@ -28,11 +30,34 @@ const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
     <div className="mainWrapper">
       <Nav />
       <div className={`${styles.major} mw-wrapper`}>
+        <Title color="white" content="Profile" variant="h2" />
         <table className={styles.table}>
-          <tr className={styles.tr}>
-            <td className={styles.td}>Email</td>
-            <td className={styles.td}>{data.email}</td>
-          </tr>
+          {Object.keys(data).map((key: any) => (
+            <tr key={key}>
+              <td className={`${styles.td} ${styles.colored}`}>
+                {camelToTitle(key)}
+              </td>
+              <td className={styles.td}>
+                {
+                  //@ts-ignore
+                  key !== "photo" || !data[key] ? (
+                    //@ts-ignore
+                    data[key] ?? "NIL"
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      className={styles.profilePic}
+                      src={
+                        //@ts-ignore
+                        data[key]
+                      }
+                      alt="profile"
+                    />
+                  )
+                }
+              </td>
+            </tr>
+          ))}
         </table>
       </div>
     </div>
