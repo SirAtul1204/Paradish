@@ -14,6 +14,11 @@ import generatePassword from "password-generator";
 import { passwordSchema } from "../../Utils/passwordValidator";
 import * as bcrypt from "bcrypt";
 
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+});
+
 export const userRouter = createRouter()
   .query("hello", {
     async resolve() {
@@ -128,11 +133,6 @@ export const userRouter = createRouter()
           code: "NOT_FOUND",
           message: "Couldn't create user",
         });
-
-      const s3 = new AWS.S3({
-        accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-      });
 
       const base64Data = Buffer.from(
         input.photo.data.replace(/^data:image\/\w+;base64,/, ""),
@@ -316,5 +316,115 @@ export const userRouter = createRouter()
         });
 
       return user;
+    },
+  })
+  .mutation("update", {
+    input: z.object({
+      id: z.number(),
+      creatorEmail: emailSchema,
+      key: z.string().trim(),
+      val: z.string().trim(),
+    }),
+    async resolve({ input }) {
+      const creator = await prisma.user.findFirst({
+        where: {
+          email: input.creatorEmail,
+        },
+      });
+
+      if (!creator)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized",
+        });
+
+      const user = await prisma.user.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!user)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Couldn't find user",
+        });
+
+      console.log(
+        (user.id as any as Number) !== input.id,
+        creator.role !== Role.OWNER
+      );
+
+      if (
+        (user.id as any as Number) !== input.id &&
+        creator.role !== Role.OWNER
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to update this user",
+        });
+      }
+
+      if (input.key === "photo") {
+        const base64Data = Buffer.from(
+          input.val.replace(/^data:image\/\w+;base64,/, ""),
+          "base64"
+        );
+
+        s3.upload(
+          {
+            Bucket: "paradish",
+            Key: `profile_pictures/${user.id}.${
+              input.val.split(";")[0].split("/")[1]
+            }`,
+            Body: base64Data,
+            ContentEncoding: "base64",
+            ContentType: `image/${input.val.split(";")[0].split("/")[1]}`,
+          },
+          async (err, data) => {
+            if (err) {
+              throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Couldn't upload photo",
+              });
+            } else {
+              const photoUrl = data.Location;
+              const updatedUser = await prisma.user.update({
+                where: {
+                  id: user.id,
+                },
+                data: {
+                  photo: photoUrl,
+                },
+              });
+
+              if (!updatedUser) {
+                throw new TRPCError({
+                  code: "INTERNAL_SERVER_ERROR",
+                  message: "Couldn't update user",
+                });
+              }
+            }
+          }
+        );
+      } else {
+        console.log({ key: input.key, val: input.val });
+        const updatedUser = await prisma.user.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            [input.key]: input.val,
+          },
+        });
+
+        if (!updatedUser)
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't update user",
+          });
+      }
+
+      return { message: "User updated successfully" };
     },
   });

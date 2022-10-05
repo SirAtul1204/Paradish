@@ -22,3 +22,10 @@
   gap: 1.5rem;
   border: 2px solid;
 }
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}

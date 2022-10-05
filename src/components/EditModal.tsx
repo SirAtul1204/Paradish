@@ -2,22 +2,26 @@ import styles from "../styles/EditModal-styles.module.css";
 import Title from "./Title";
 import Form from "./Form";
 import Input from "./Input";
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import StatusButton from "./StatusButton";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 
-const EditModal = () => {
-  const { content, val } = useSelector(
-    (state: RootState) => state.editModalData
-  );
+export interface EditModalProps {
+  content: string;
+  inputType: "text" | "file";
+  handleSave: (val: string) => void;
+  handleCancel: () => void;
+  newVal: string;
+  changeNewVal: (e: ChangeEvent<HTMLInputElement>) => void;
+}
 
-  const [newVal, setNewVal] = useState(val);
-
-  const changeNewVal = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewVal(e.target.value);
-  };
-
+const EditModal: FC<EditModalProps> = ({
+  content,
+  inputType,
+  handleSave,
+  handleCancel,
+  newVal,
+  changeNewVal,
+}) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -25,12 +29,23 @@ const EditModal = () => {
         <Form>
           <Input
             content={content}
-            type="text"
+            type={inputType}
             value={newVal}
             modifier={changeNewVal}
             required
           />
-          <StatusButton action={() => {}} content="Save" status="success" />
+          <div className={styles.buttonContainer}>
+            <StatusButton
+              action={() => handleSave(newVal)}
+              content="Save"
+              status="success"
+            />
+            <StatusButton
+              action={handleCancel}
+              content="Cancel"
+              status="error"
+            />
+          </div>
         </Form>
       </div>
     </div>

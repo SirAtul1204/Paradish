@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext, NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Nav from "../../../components/Nav";
 import { DefaultProps } from "../../../Utils/interface";
 import validateSession from "../../../Utils/validateSession";
@@ -10,38 +10,61 @@ import Loader from "../../../components/Loader";
 import { camelToTitle } from "../../../Utils/camelToTitle";
 import Title from "../../../components/Title";
 import StatusButton from "../../../components/StatusButton";
-import EditModal from "../../../components/EditModal";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
-import {
-  openEditModal,
-  updateModal,
-} from "../../../redux/reducers/EditModalReducer";
+import EditModal, { EditModalProps } from "../../../components/EditModal";
+
+interface TModalState {
+  content: string;
+  inputType: "text" | "file";
+  handleSave: (val: string) => void;
+  handleCancel: () => void;
+  isOpen: boolean;
+}
 
 const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
   const router = useRouter();
 
-  const { isOpen } = useSelector((state: RootState) => state.editModalData);
-
-  const { data, isLoading, isError } = trpc.useQuery([
+  const { data, isFetching, isError, refetch } = trpc.useQuery([
     "user.get-by-id",
     { creatorEmail: userEmail, id: parseInt(String(router.query.id)) },
   ]);
 
-  const dispatch = useDispatch();
+  const [newVal, setNewVal] = useState("");
+
+  const [modalState, setModalState] = useState<TModalState>({
+    content: "",
+    inputType: "text",
+    handleSave: (val: string) => {},
+    handleCancel: () => {},
+    isOpen: false,
+  });
+
+  const mutation = trpc.useMutation("user.update");
 
   const handleEdit = (key: string) => {
-    dispatch(
-      updateModal({
-        content: camelToTitle(key),
-        //@ts-ignore
-        val: data[key],
-      })
-    );
-    dispatch(openEditModal());
+    setModalState({
+      content: camelToTitle(key),
+      //@ts-ignore
+      val: data[key],
+      inputType: key === "photo" ? "file" : "text",
+      handleSave: (val: string) => {
+        mutation.mutate({
+          creatorEmail: userEmail,
+          id: parseInt(String(router.query.id)),
+          key,
+          val,
+        });
+        setModalState((prev) => ({ ...prev, isOpen: false }));
+        refetch();
+      },
+      handleCancel: () => {
+        setModalState((prev) => ({ ...prev, isOpen: false }));
+      },
+      isOpen: true,
+    });
   };
 
-  if (isLoading) return <Loader content="Fetching profile data..." />;
+  if (isFetching || mutation.isLoading)
+    return <Loader content="Fetching profile data..." />;
 
   if (isError) {
     router.push("/errorPages/forbidden");
@@ -93,7 +116,16 @@ const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
             </tr>
           ))}
         </table>
-        {isOpen && <EditModal />}
+        {modalState.isOpen && (
+          <EditModal
+            newVal={newVal}
+            changeNewVal={(e) => setNewVal(e.target.value)}
+            content={modalState.content}
+            inputType={modalState.inputType}
+            handleSave={modalState.handleSave}
+            handleCancel={modalState.handleCancel}
+          />
+        )}
       </div>
     </div>
   );

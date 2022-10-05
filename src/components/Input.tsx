@@ -5,7 +5,7 @@ import basicValidator from "../Utils/basicValidator";
 export interface InputProps {
   value: string;
   modifier: (e: any) => void;
-  type: "text" | "number" | "email" | "password";
+  type: "text" | "number" | "email" | "password" | "file";
   content: string;
   validator?: (data: string) => [boolean, string | undefined];
   required?: boolean;
