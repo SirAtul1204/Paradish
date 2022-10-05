@@ -9,6 +9,7 @@
 
 .label {
   font-weight: 600;
+  text-transform: capitalize;
   color: var(--color-white);
 }
 

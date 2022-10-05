@@ -9,14 +9,37 @@ import { useRouter } from "next/router";
 import Loader from "../../../components/Loader";
 import { camelToTitle } from "../../../Utils/camelToTitle";
 import Title from "../../../components/Title";
+import StatusButton from "../../../components/StatusButton";
+import EditModal from "../../../components/EditModal";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import {
+  openEditModal,
+  updateModal,
+} from "../../../redux/reducers/EditModalReducer";
 
 const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
   const router = useRouter();
+
+  const { isOpen } = useSelector((state: RootState) => state.editModalData);
 
   const { data, isLoading, isError } = trpc.useQuery([
     "user.get-by-id",
     { creatorEmail: userEmail, id: parseInt(String(router.query.id)) },
   ]);
+
+  const dispatch = useDispatch();
+
+  const handleEdit = (key: string) => {
+    dispatch(
+      updateModal({
+        content: camelToTitle(key),
+        //@ts-ignore
+        val: data[key],
+      })
+    );
+    dispatch(openEditModal());
+  };
 
   if (isLoading) return <Loader content="Fetching profile data..." />;
 
@@ -56,9 +79,21 @@ const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
                   )
                 }
               </td>
+              {key !== "id" && key !== "restaurantId" ? (
+                <td className={styles.td}>
+                  <StatusButton
+                    action={() => handleEdit(key)}
+                    content="Edit"
+                    status="info"
+                  />
+                </td>
+              ) : (
+                <td className={styles.td}></td>
+              )}
             </tr>
           ))}
         </table>
+        {isOpen && <EditModal />}
       </div>
     </div>
   );

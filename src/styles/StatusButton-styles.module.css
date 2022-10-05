@@ -1,7 +1,7 @@
 .btn {
   border: none;
   border-radius: var(--border-radius-big-2);
-  padding: 2% 10%;
+  padding: 1rem 3rem;
   color: var(--color-white);
   font-weight: 700;
   text-align: center;
