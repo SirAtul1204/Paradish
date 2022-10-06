@@ -23,12 +23,12 @@ interface TModalState {
 const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
   const router = useRouter();
 
-  const { data, isFetching, isError, refetch } = trpc.useQuery([
+  const { data, isFetching, isError } = trpc.useQuery([
     "user.get-by-id",
     { creatorEmail: userEmail, id: parseInt(String(router.query.id)) },
   ]);
 
-  const [newVal, setNewVal] = useState("");
+  const [newVal, setNewVal] = useState<string>("");
 
   const [modalState, setModalState] = useState<TModalState>({
     content: "",
@@ -38,7 +38,13 @@ const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
     isOpen: false,
   });
 
-  const mutation = trpc.useMutation("user.update");
+  const utils = trpc.useContext();
+
+  const mutation = trpc.useMutation("user.update", {
+    onSuccess: (data) => {
+      utils.invalidateQueries(["user.get-by-id"]);
+    },
+  });
 
   const handleEdit = (key: string) => {
     setModalState({
@@ -53,8 +59,8 @@ const Profile: NextPage<DefaultProps> = ({ userEmail, userName }) => {
           key,
           val,
         });
+
         setModalState((prev) => ({ ...prev, isOpen: false }));
-        refetch();
       },
       handleCancel: () => {
         setModalState((prev) => ({ ...prev, isOpen: false }));

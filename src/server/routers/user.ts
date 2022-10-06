@@ -425,6 +425,11 @@ export const userRouter = createRouter()
           });
       }
 
-      return { message: "User updated successfully" };
+      return {
+        message: "User updated successfully",
+        updatedData: {
+          [input.key]: input.val,
+        },
+      };
     },
   });
