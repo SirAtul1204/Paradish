@@ -365,65 +365,20 @@ export const userRouter = createRouter()
         });
       }
 
-      if (input.key === "photo") {
-        const base64Data = Buffer.from(
-          input.val.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          [input.key]: input.val,
+        },
+      });
 
-        s3.upload(
-          {
-            Bucket: "paradish",
-            Key: `profile_pictures/${user.id}.${
-              input.val.split(";")[0].split("/")[1]
-            }`,
-            Body: base64Data,
-            ContentEncoding: "base64",
-            ContentType: `image/${input.val.split(";")[0].split("/")[1]}`,
-          },
-          async (err, data) => {
-            if (err) {
-              throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "Couldn't upload photo",
-              });
-            } else {
-              const photoUrl = data.Location;
-              const updatedUser = await prisma.user.update({
-                where: {
-                  id: user.id,
-                },
-                data: {
-                  photo: photoUrl,
-                },
-              });
-
-              if (!updatedUser) {
-                throw new TRPCError({
-                  code: "INTERNAL_SERVER_ERROR",
-                  message: "Couldn't update user",
-                });
-              }
-            }
-          }
-        );
-      } else {
-        console.log({ key: input.key, val: input.val });
-        const updatedUser = await prisma.user.update({
-          where: {
-            id: input.id,
-          },
-          data: {
-            [input.key]: input.val,
-          },
+      if (!updatedUser)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Couldn't update user",
         });
-
-        if (!updatedUser)
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't update user",
-          });
-      }
 
       return {
         message: "User updated successfully",
