@@ -10,7 +10,7 @@ import Loader from "../../../components/Loader";
 import { camelToTitle } from "../../../Utils/camelToTitle";
 import Title from "../../../components/Title";
 import StatusButton from "../../../components/StatusButton";
-import EditModal, { EditModalProps } from "../../../components/EditModal";
+import EditModal from "../../../components/EditModal";
 
 interface TModalState {
   content: string;
